@@ -3,6 +3,10 @@
 A small world that nobody programmed.
 
 > **Just want to watch it? No technical skills needed.**
+>
+> **Easiest: open the live pool in your browser → https://v1999b.github.io/tidepool/**
+>
+> Or run it on your own computer:
 > 1. Download the file `tidepool.html` (click it above, then the **Download** button — or grab the whole
 >    project with **Code → Download ZIP** and unzip it).
 > 2. Double-click `tidepool.html`. It opens in your normal browser (Chrome, Safari, Firefox, Edge — any).
