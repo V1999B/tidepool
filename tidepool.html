@@ -643,7 +643,14 @@ window.addEventListener('keydown', ev => {
 });
 
 // ── main loop ────────────────────────────────────────────────────────────────
+// URL params let you share a specific saga: ?seed=123&t=7000&trails=1&ui=0
+const Q = new URLSearchParams(location.search);
+if (Q.has('seed')) SEED = (parseInt(Q.get('seed'), 10) >>> 0) || SEED;
 reset(SEED);
+if (Q.has('t')) { const n = Math.min(200000, parseInt(Q.get('t'), 10) || 0); for (let i = 0; i < n; i++) step(); }
+if (Q.get('trails') === '1') { showTrails = true; $('b-trails').classList.add('on'); for (let i = 0; i < 40; i++) step(); }
+if (Q.get('ui') === '0') { $('controls').style.display = 'none'; $('hint').style.display = 'none'; }
+if (Q.get('paused') === '1') { $('b-pause').click(); }
 let statTimer = 0;
 function frame() {
   if (!paused) for (let i = 0; i < speed; i++) step();

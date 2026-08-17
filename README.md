@@ -47,6 +47,10 @@ was found by mutation and kept by survival.
 
 Controls: click drops food · shift-click inspects · `space` pause · `f` speed (1×/3×/8×/20×) · `t` trails · `s` sense radii · `r` new tide.
 
+**Share a specific saga by link.** URL parameters: `?seed=1048637584&t=3600&trails=1&ui=0` — fixed seed, fast-forward `t` ticks
+before the first frame, trails on, controls hidden (`paused=1` to freeze). Example:
+[the Pilu herd at tick 3,600](https://v1999b.github.io/tidepool/?seed=1048637584&t=3600&trails=1).
+
 ## Gallery
 
 | | |
