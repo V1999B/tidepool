@@ -17,7 +17,7 @@ A small world that nobody programmed.
 
 One file, no dependencies, no build.
 
-![a late tide: the herd has learned to follow the light; a red minority lives at its edges](screenshots/04_late_tide_herd_in_the_light.jpg)
+![one creature's brain open while it swims: senses on the left, hidden neurons in the middle, muscles on the right — teal excites, red inhibits](screenshots/07_poster_brain_open_pilu_2800px.png)
 
 ## What it is
 
@@ -47,9 +47,11 @@ was found by mutation and kept by survival.
 
 Controls: click drops food · shift-click inspects · `space` pause · `f` speed (1×/3×/8×/20×) · `t` trails · `s` sense radii · `r` new tide.
 
-**Share a specific saga by link.** URL parameters: `?seed=1048637584&t=3600&trails=1&ui=0` — fixed seed, fast-forward `t` ticks
-before the first frame, trails on, controls hidden (`paused=1` to freeze). Example:
-[the Pilu herd at tick 3,600](https://v1999b.github.io/tidepool/?seed=1048637584&t=3600&trails=1).
+**Share a specific saga by link.** URL parameters: `?seed=1048637584&t=3600&trails=1&ui=0&inspect=1` — fixed seed,
+fast-forward `t` ticks before the first frame, trails on, controls hidden (poster mode, larger brain panel), auto-open the
+most experienced creature's brain (`paused=1` to freeze). Examples:
+[the Pilu herd at tick 3,600](https://v1999b.github.io/tidepool/?seed=1048637584&t=3600&trails=1) ·
+[same tide, one brain open, thinking live](https://v1999b.github.io/tidepool/?seed=1048637584&t=3600&trails=1&inspect=1).
 
 ## Gallery
 

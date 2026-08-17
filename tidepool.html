@@ -43,6 +43,9 @@
   #inspect.show { display: block; }
   #inspect h2 { margin: 0 0 6px; font-size: 12px; font-weight: 600; letter-spacing: .1em; color: var(--accent); }
   #brain { width: 100%; height: 120px; display: block; margin-top: 8px; }
+  body.poster #inspect { width: 440px; padding: 16px 18px; font-size: 15px; }
+  body.poster #inspect h2 { font-size: 14px; }
+  body.poster #brain { height: 260px; margin-top: 12px; }
 
   #chronicle { position: fixed; left: 14px; top: 262px; width: 278px; max-height: calc(100vh - 380px);
     overflow: hidden; padding: 10px 14px; background: var(--glass); border: 1px solid var(--line);
@@ -527,8 +530,10 @@ function draw() {
     cx.fillStyle = 'rgba(4,16,26,0.85)'; cx.beginPath(); cx.arc(r * 0.6, 0, r * 0.28, 0, TAU); cx.fill();
     cx.restore();
     if (c === selected) {
-      cx.strokeStyle = 'rgba(255,255,255,0.8)'; cx.lineWidth = 1.2;
-      cx.beginPath(); cx.arc(c.x, c.y, r * 3.2, 0, TAU); cx.stroke();
+      const P = document.body.classList.contains('poster');
+      cx.strokeStyle = 'rgba(255,255,255,0.85)'; cx.lineWidth = P ? 2 : 1.2;
+      cx.beginPath(); cx.arc(c.x, c.y, r * (P ? 4.5 : 3.2), 0, TAU); cx.stroke();
+      if (P) { cx.strokeStyle = 'rgba(255,255,255,0.25)'; cx.lineWidth = 1; cx.beginPath(); cx.arc(c.x, c.y, W.senseRange, 0, TAU); cx.stroke(); }
     }
   }
 }
@@ -580,37 +585,37 @@ function drawInspector() {
     `size ${c.g.body.size.toFixed(2)} · speed ${c.g.body.speed.toFixed(2)}<br>` +
     `brain ${c.g.hidden} hidden · children ${c.children}<br>ate ${c.foodEaten} motes · bit ${c.kills} (${c.kinKills} kin)`;
   const b = $('brain'), bx = b.getContext('2d');
-  const bw = b.clientWidth, bh = 120;
+  const bw = b.clientWidth, bh = b.clientHeight || 120;
   if (b.width !== bw * DPR) { b.width = bw * DPR; b.height = bh * DPR; }
   bx.setTransform(DPR, 0, 0, DPR, 0, 0);
   bx.clearRect(0, 0, bw, bh);
-  const H = c.g.hidden, w = c.g.w;
-  const xi = 10, xh = bw / 2, xo = bw - 10;
+  const H = c.g.hidden, w = c.g.w; const P = document.body.classList.contains('poster');
+  const xi = P ? 14 : 10, xh = bw / 2, xo = bw - (P ? 14 : 10);
   const yi = i => 6 + i * (bh - 12) / (N_IN - 1), yh = h => 6 + (h + 0.5) * (bh - 12) / H, yo = o => 6 + (o + 0.5) * (bh - 12) / N_OUT;
   // weights
   for (let h = 0; h < H; h++) for (let i = 0; i < N_IN; i++) {
     const v = w[h * N_IN + i] * c.inp[i]; if (Math.abs(v) < 0.08) continue;
     bx.strokeStyle = v > 0 ? `rgba(127,214,194,${Math.min(1, Math.abs(v))})` : `rgba(240,120,120,${Math.min(1, Math.abs(v))})`;
-    bx.lineWidth = Math.min(2.5, Math.abs(v) * 1.5); bx.beginPath(); bx.moveTo(xi, yi(i)); bx.lineTo(xh, yh(h)); bx.stroke();
+    bx.lineWidth = Math.min(P ? 4 : 2.5, Math.abs(v) * (P ? 2.4 : 1.5)); bx.beginPath(); bx.moveTo(xi, yi(i)); bx.lineTo(xh, yh(h)); bx.stroke();
   }
   const ob = N_IN * H;
   for (let o = 0; o < N_OUT; o++) for (let h = 0; h < H; h++) {
     const v = w[ob + o * (H + 1) + h] * c.hid[h]; if (Math.abs(v) < 0.08) continue;
     bx.strokeStyle = v > 0 ? `rgba(127,214,194,${Math.min(1, Math.abs(v))})` : `rgba(240,120,120,${Math.min(1, Math.abs(v))})`;
-    bx.lineWidth = Math.min(2.5, Math.abs(v) * 1.5); bx.beginPath(); bx.moveTo(xh, yh(h)); bx.lineTo(xo, yo(o)); bx.stroke();
+    bx.lineWidth = Math.min(P ? 4 : 2.5, Math.abs(v) * (P ? 2.4 : 1.5)); bx.beginPath(); bx.moveTo(xh, yh(h)); bx.lineTo(xo, yo(o)); bx.stroke();
   }
   // nodes
-  bx.font = '9px ui-monospace, Menlo, monospace'; bx.textBaseline = 'middle';
+  bx.font = (P ? '12px' : '9px') + ' ui-monospace, Menlo, monospace'; bx.textBaseline = 'middle';
   for (let i = 0; i < N_IN; i++) {
     const a = Math.abs(c.inp[i]);
-    bx.fillStyle = `rgba(207,227,238,${0.25 + 0.75 * a})`; bx.beginPath(); bx.arc(xi, yi(i), 2.5, 0, TAU); bx.fill();
-    bx.fillStyle = 'rgba(111,139,153,0.9)'; bx.textAlign = 'left'; bx.fillText(INP_NAMES[i], xi + 6, yi(i));
+    bx.fillStyle = `rgba(207,227,238,${0.25 + 0.75 * a})`; bx.beginPath(); bx.arc(xi, yi(i), P ? 4 : 2.5, 0, TAU); bx.fill();
+    bx.fillStyle = 'rgba(111,139,153,0.9)'; bx.textAlign = 'left'; bx.fillText(INP_NAMES[i], xi + (P ? 9 : 6), yi(i));
   }
-  for (let h = 0; h < H; h++) { const a = Math.abs(c.hid[h]); bx.fillStyle = `rgba(207,227,238,${0.25 + 0.75 * a})`; bx.beginPath(); bx.arc(xh, yh(h), 3, 0, TAU); bx.fill(); }
+  for (let h = 0; h < H; h++) { const a = Math.abs(c.hid[h]); bx.fillStyle = `rgba(207,227,238,${0.25 + 0.75 * a})`; bx.beginPath(); bx.arc(xh, yh(h), P ? 5 : 3, 0, TAU); bx.fill(); }
   for (let o = 0; o < N_OUT; o++) {
     const a = Math.abs(c.out[o]);
-    bx.fillStyle = `rgba(207,227,238,${0.25 + 0.75 * a})`; bx.beginPath(); bx.arc(xo, yo(o), 3, 0, TAU); bx.fill();
-    bx.fillStyle = 'rgba(111,139,153,0.9)'; bx.textAlign = 'right'; bx.fillText(OUT_NAMES[o], xo - 6, yo(o));
+    bx.fillStyle = `rgba(207,227,238,${0.25 + 0.75 * a})`; bx.beginPath(); bx.arc(xo, yo(o), P ? 5 : 3, 0, TAU); bx.fill();
+    bx.fillStyle = 'rgba(111,139,153,0.9)'; bx.textAlign = 'right'; bx.fillText(OUT_NAMES[o], xo - (P ? 9 : 6), yo(o));
   }
 }
 
@@ -649,7 +654,12 @@ if (Q.has('seed')) SEED = (parseInt(Q.get('seed'), 10) >>> 0) || SEED;
 reset(SEED);
 if (Q.has('t')) { const n = Math.min(200000, parseInt(Q.get('t'), 10) || 0); for (let i = 0; i < n; i++) step(); }
 if (Q.get('trails') === '1') { showTrails = true; $('b-trails').classList.add('on'); for (let i = 0; i < 40; i++) step(); }
-if (Q.get('ui') === '0') { $('controls').style.display = 'none'; $('hint').style.display = 'none'; }
+if (Q.get('ui') === '0') { $('controls').style.display = 'none'; $('hint').style.display = 'none'; document.body.classList.add('poster'); }
+if (Q.get('inspect') === '1' && creatures.length) { // pick the most experienced creature that isn't hidden under the panels
+  const ok = creatures.filter(c => c.x > 320 && c.x < W.w - 480 && c.y > 40 && c.y < W.h - 80);
+  selected = (ok.length ? ok : creatures).slice().sort((a, b) => (b.children + 2 * b.kills) - (a.children + 2 * a.kills))[0];
+  $('inspect').classList.add('show');
+}
 if (Q.get('paused') === '1') { $('b-pause').click(); }
 let statTimer = 0;
 function frame() {
